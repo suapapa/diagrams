@@ -4,16 +4,18 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	diagrams "github.com/suapapa/go_diagrams"
 )
 
 var (
-	diagramIn  = "diagram.py"
-	diagramOut = "web_service.png"
+	diagramIn = "diagram.py"
 )
 
 func main() {
@@ -38,13 +40,14 @@ func main() {
 	}
 
 	// find out diagramOut exists
-	// match, err := filepath.Glob("*.png")
-	// checkErr(err)
-	// if len(match) != 1 {
-	// 	checkErr(fmt.Errorf("fail to gen diagram png"))
-	// }
-	// diagramOut = match[0]
-	// log.Println(diagramOut)
+	// diagrams 파이썬 파일 안에 선언된 이름으로 png가 생성됨. glob으로 찾자!
+	match, err := filepath.Glob("*.png")
+	checkErr(err)
+	if len(match) != 1 {
+		checkErr(fmt.Errorf("fail to gen diagram png"))
+	}
+	diagramOut := match[0]
+	log.Println(diagramOut)
 
 	_, err = os.Stat(diagramOut)
 	checkErr(err)
@@ -57,7 +60,7 @@ func main() {
 	content, err := io.ReadAll(f)
 	checkErr(err)
 	encoded := base64.StdEncoding.EncodeToString(content)
-	printJson(&diagrams.Result{Img: encoded, Msg: outStr, Err: errStr})
+	printJson(&diagrams.Result{Img: encoded, Name: diagramOut, Msg: outStr, Err: errStr})
 }
 
 func printJson(v any) {
