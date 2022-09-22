@@ -1,15 +1,21 @@
 # diagrams-back
 
-## sandbox
+## Usage
+
+1. Create container
+2. Checkout example
+
+
+## Test diagrams container
 
 Build and push docker image:
 
-    $ docker build -f Dockerfile -t diagrams_sandbox:dev .
+    $ docker build -f Dockerfile -t diagrams:dev .
 
 Example Run:
 
-    $ cat sample/diagram_err.py | docker run -i --rm diagrams_sandbox:dev
+    $ cat sample/diagram_err.py | docker run -i --rm diagrams:dev
 
 Explore container:
 
-    $ docker run -it --rm -v $(pwd)/sample:/sample --entrypoint /bin/bash diagrams_sandbox:dev
+    $ docker run -it --rm -v $(pwd)/sample:/sample --entrypoint /bin/bash diagrams:dev

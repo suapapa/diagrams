@@ -8,7 +8,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/suapapa/diagrams"
+	diagrams "github.com/suapapa/go_diagrams"
 )
 
 var (
