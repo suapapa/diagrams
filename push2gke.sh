@@ -1,6 +1,6 @@
 #!/bin/bash
-#git tag -a $1 -m "add tag for $1"
-#git push --tags
+git tag -a $1 -m "add tag for $1"
+git push --tags
 
 IMAGE_TAG=gcr.io/homin-dev/diagrams
 IMAGE_NAME=$IMAGE_TAG:$1 
