@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	diagrams "github.com/suapapa/go_diagrams"
 )
@@ -19,10 +20,26 @@ var (
 )
 
 func main() {
-	// read diagrams code from stdin
+	// read stdin
+	buf := &bytes.Buffer{}
+	io.Copy(buf, os.Stdin)
+
+	// check for invalid input
+	inputStr := buf.String()
+	if strings.Contains(inputStr, "os.") || strings.Contains(inputStr, "sys.") {
+		ret := diagrams.Result{
+			Msg: "don't call 'os.' or 'sys.'",
+			Err: "invalid input",
+		}
+
+		json.NewEncoder(os.Stdout).Encode(&ret)
+		os.Exit(-1)
+	}
+
+	// copy input to file
 	w, err := os.Create(diagramIn)
 	checkErr(err)
-	io.Copy(w, os.Stdin)
+	io.Copy(w, buf)
 	w.Close()
 
 	// run diagrams code with python (this program should run in gVisor)
