@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	diagrams "github.com/suapapa/go_diagrams"
 )
@@ -42,13 +44,18 @@ func main() {
 	io.Copy(w, buf)
 	w.Close()
 
+	// deadline is 2 secs
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
 	// run diagrams code with python (this program should run in gVisor)
 	outBuf := &bytes.Buffer{}
 	errBuf := &bytes.Buffer{}
-	cmd := exec.Command("python", diagramIn)
+	cmd := exec.CommandContext(ctx, "python", diagramIn)
 	cmd.Stdout = outBuf
 	cmd.Stderr = errBuf
 	err = cmd.Run()
+
 	outStr := outBuf.String()
 	errStr := errBuf.String()
 	if err != nil {
