@@ -10,7 +10,7 @@
 
 Build and push docker image:
 
-    $ docker build -f Dockerfile -t diagrams:dev .
+    $ docker build -t diagrams:dev .
 
 Example Run:
 
