@@ -15,6 +15,11 @@ func securityCheck(in string) error {
 
 	upper, lower := c[0], c[1]
 
+	// dont allow multi statement in one line in upper half
+	if strings.Contains(upper, ";") {
+		return fmt.Errorf("dont allow multi statement in one line in upper half")
+	}
+
 	// upper half must starts with 'from diagrams'
 	uls := strings.Split(upper, "\n")
 	for _, ul := range uls {

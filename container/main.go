@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	diagrams "github.com/suapapa/go_diagrams"
@@ -22,6 +23,17 @@ var (
 
 const (
 	anchorStr = "# Diagrams Sandbox: DO NOT DELETE THIS LINE #"
+	pyMine    = `import types
+def imports():
+	for name, val in globals().items():
+		if isinstance(val, types.ModuleType):
+			yield val.__name__
+
+# this should contain [__builtin__, type] only
+if len(list(imports())) != 2:
+		import sys
+		sys.exit("invalid input")
+`
 )
 
 func main() {
@@ -41,10 +53,13 @@ func main() {
 		os.Exit(-1)
 	}
 
+	// insert mine for possible attack
+	inputStr = strings.Replace(inputStr, anchorStr, pyMine, -1)
+
 	// copy input to file
 	w, err := os.Create(diagramIn)
 	checkErr(err)
-	io.Copy(w, buf)
+	fmt.Fprint(w, inputStr)
 	w.Close()
 
 	// deadline is 2 secs
