@@ -11,7 +11,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"time"
 
 	diagrams "github.com/suapapa/go_diagrams"
@@ -21,17 +20,21 @@ var (
 	diagramIn = "diagram.py"
 )
 
+const (
+	anchorStr = "# Diagrams Sandbox: DO NOT DELETE THIS LINE #"
+)
+
 func main() {
 	// read stdin
 	buf := &bytes.Buffer{}
 	io.Copy(buf, os.Stdin)
+	inputStr := buf.String()
 
 	// check for invalid input
-	inputStr := buf.String()
-	if strings.Contains(inputStr, "os.") || strings.Contains(inputStr, "sys.") {
+	if err := securityCheck(inputStr); err != nil {
 		ret := diagrams.Result{
-			Msg: "don't call 'os.' or 'sys.'",
-			Err: "invalid input",
+			Msg: "security check failed",
+			Err: err.Error(),
 		}
 
 		json.NewEncoder(os.Stdout).Encode(&ret)
