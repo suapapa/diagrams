@@ -7,6 +7,8 @@ from diagrams.programming.framework import Vue
 from diagrams.generic.database import SQL
 from diagrams.generic.device import Tablet
 
+# Diagrams Sandbox: DO NOT DELETE THIS LINE #
+
 print("hello world!\n")
 with Diagram("", show=False):
     with Cluster("cluster"):
