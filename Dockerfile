@@ -6,8 +6,11 @@ WORKDIR /src/container
 RUN CGO_ENABLED=0 go build -o sandbox
 
 FROM python:alpine
+
 RUN apk add --update --no-cache graphviz \
-    font-bitstream-type1 ghostscript-fonts ttf-cantarell
+    font-bitstream-type1 ghostscript-fonts ttf-cantarell \
+    python3-dev gcc libc-dev
+
 RUN pip install diagrams
 WORKDIR /diagrams
 COPY container/listup_nodes.py .
